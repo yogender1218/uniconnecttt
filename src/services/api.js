@@ -2,6 +2,118 @@
 // Dummy API service for demonstration
 import { toast } from "sonner";
 
+export const api = {
+  // 🔹 Portfolio API
+  getPortfolio: async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/portfolio`);
+      if (!response.ok) throw new Error("Failed to fetch portfolio data");
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching portfolio:", error);
+      throw error;
+    }
+  },
+
+  updatePortfolio: async (portfolioId, data) => {
+    try {
+      const response = await fetch(`${BASE_URL}/portfolio/${portfolioId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error("Failed to update portfolio");
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating portfolio:", error);
+      throw error;
+    }
+  },
+
+  addPortfolio: async (newPortfolio) => {
+    try {
+      const response = await fetch(`${BASE_URL}/portfolio`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPortfolio),
+      });
+      if (!response.ok) throw new Error("Failed to add portfolio");
+      return await response.json();
+    } catch (error) {
+      console.error("Error adding portfolio:", error);
+      throw error;
+    }
+  },
+
+  deletePortfolio: async (portfolioId) => {
+    try {
+      const response = await fetch(`${BASE_URL}/portfolio/${portfolioId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete portfolio");
+      return await response.json();
+    } catch (error) {
+      console.error("Error deleting portfolio:", error);
+      throw error;
+    }
+  },
+
+  // 🔹 Courses API
+  getCourses: async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/courses`);
+      if (!response.ok) throw new Error("Failed to fetch courses");
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      throw error;
+    }
+  },
+
+  updateCourse: async (courseId, data) => {
+    try {
+      const response = await fetch(`${BASE_URL}/courses/${courseId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error("Failed to update course");
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating course:", error);
+      throw error;
+    }
+  },
+
+  addCourse: async (newCourse) => {
+    try {
+      const response = await fetch(`${BASE_URL}/courses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newCourse),
+      });
+      if (!response.ok) throw new Error("Failed to add course");
+      return await response.json();
+    } catch (error) {
+      console.error("Error adding course:", error);
+      throw error;
+    }
+  },
+
+  deleteCourse: async (courseId) => {
+    try {
+      const response = await fetch(`${BASE_URL}/courses/${courseId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete course");
+      return await response.json();
+    } catch (error) {
+      console.error("Error deleting course:", error);
+      throw error;
+    }
+  },
+};
+
 // Mock database
 const mockUsers = [
   {
