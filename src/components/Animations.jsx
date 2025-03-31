@@ -5,23 +5,22 @@ import { cn } from "@/lib/utils";
 export const FadeIn = ({ 
   children, 
   delay = 0, 
-  duration = 0.3,
-  className
+  duration = 0.3, 
+  className 
 }) => {
   return (
     <div 
       className={cn("animate-fade-in", className)}
       style={{ 
         animationDelay: `${delay}s`, 
-        animationDuration: `${duration}s`,
-        opacity: 0,
-        animationFillMode: "forwards"
+        animationDuration: `${duration}s` 
       }}
     >
       {children}
     </div>
   );
 };
+
 
 export const SlideIn = ({ 
   children, 

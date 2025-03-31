@@ -1,12 +1,10 @@
-import { createRoot } from 'react-dom/client';
-import App from './App';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
 
-// Ensure TypeScript knows "root" is not null
-const rootElement = document.getElementById("root");
-
-if (rootElement) {
-  createRoot(rootElement).render(<App />);
-} else {
-  console.error("Root element not found");
-}
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
