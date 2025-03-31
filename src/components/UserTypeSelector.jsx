@@ -1,17 +1,18 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { GraduationCap, BookOpen, TrendingUp } from "lucide-react";
 import { StaggeredContainer } from "./Animations";
 
-const UserTypeSelector = ({ className, onSelect }) => {
-  const { selectUserType } = useAuth();
+const UserTypeSelector = ({ className }) => {
+  const { updateUserType } = useAuth();  
+  const navigate = useNavigate(); // Navigation के लिए
 
   const handleSelect = (type) => {
-    selectUserType(type);
-    if (onSelect) onSelect();
+    updateUserType(type); // यूज़र टाइप अपडेट करो
+    navigate("/dashboard"); // डैशबोर्ड पर भेजो
   };
 
   return (
@@ -20,9 +21,9 @@ const UserTypeSelector = ({ className, onSelect }) => {
       <p className="text-muted-foreground mb-8 text-center max-w-md">
         Select how you want to use the dashboard. You can change this anytime.
       </p>
-      
-      <StaggeredContainer 
-        animation="slide" 
+
+      <StaggeredContainer
+        animation="slide"
         className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl"
         initialDelay={0.1}
         staggerDelay={0.15}
@@ -33,14 +34,14 @@ const UserTypeSelector = ({ className, onSelect }) => {
           description="Access educational resources, track your progress, and connect with peers and professors."
           onClick={() => handleSelect("student")}
         />
-        
+
         <UserTypeCard
           icon={<BookOpen size={32} />}
           title="Professor"
           description="Manage courses, publish research, and engage with students and colleagues."
           onClick={() => handleSelect("professor")}
         />
-        
+
         <UserTypeCard
           icon={<TrendingUp size={32} />}
           title="Investor"
@@ -52,12 +53,7 @@ const UserTypeSelector = ({ className, onSelect }) => {
   );
 };
 
-const UserTypeCard = ({ 
-  icon, 
-  title, 
-  description, 
-  onClick 
-}) => {
+const UserTypeCard = ({ icon, title, description, onClick }) => {
   return (
     <motion.div
       className="glass-card rounded-xl p-6 cursor-pointer hover-scale hover-glow"

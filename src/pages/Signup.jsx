@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -31,7 +30,6 @@ const Signup = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Clear errors when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -57,15 +55,13 @@ const Signup = () => {
     
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required";
-    } else if (!/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = "Phone number must be 10 digits";
+    } else if (!/^\d{10,15}$/.test(formData.phone)) {
+      newErrors.phone = "Phone number must be between 10 to 15 digits";
     }
     
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
+    } 
     
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
@@ -83,9 +79,9 @@ const Signup = () => {
     if (!validateForm()) return;
     
     setIsLoading(true);
+    console.log("Submitting form data:", formData);
     
     try {
-      // Send data to the API
       const response = await fetch("https://uniconnectbackend.onrender.com/api/users/register/", {
         method: "POST",
         headers: {
@@ -96,22 +92,21 @@ const Signup = () => {
           email: formData.email,
           phone: formData.phone,
           password: formData.password,
-          user_type: formData.role
+          role: formData.role
         }),
       });
       
       const data = await response.json();
+      console.log("API Response:", data);
       
       if (!response.ok) {
         throw new Error(data.message || "Registration failed");
       }
       
-      // If successful signup, also login the user
       await signup(data);
       
       toast.success("Registration successful! Redirecting to dashboard...");
       
-      // Redirect based on role
       navigate("/dashboard");
       
     } catch (error) {
@@ -134,69 +129,20 @@ const Signup = () => {
             
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    name="username"
-                    placeholder="Enter your username"
-                    value={formData.username}
-                    onChange={handleChange}
-                  />
-                  {errors.username && <p className="text-sm text-destructive">{errors.username}</p>}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                  {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    value={formData.phone}
-                    onChange={handleChange}
-                  />
-                  {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="Create a password"
-                    value={formData.password}
-                    onChange={handleChange}
-                  />
-                  {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                  />
-                  {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
-                </div>
+                {Object.entries({ username: "Username", email: "Email", phone: "Phone", password: "Password", confirmPassword: "Confirm Password" }).map(([key, label]) => (
+                  <div key={key} className="space-y-2">
+                    <Label htmlFor={key}>{label}</Label>
+                    <Input
+                      id={key}
+                      name={key}
+                      type={key.includes("password") ? "password" : "text"}
+                      placeholder={`Enter your ${label.toLowerCase()}`}
+                      value={formData[key]}
+                      onChange={handleChange}
+                    />
+                    {errors[key] && <p className="text-sm text-destructive">{errors[key]}</p>}
+                  </div>
+                ))}
                 
                 <div className="space-y-2">
                   <Label htmlFor="role">Select Role</Label>
@@ -206,7 +152,7 @@ const Signup = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="student">Student</SelectItem>
-                      <SelectItem value="professor">Professor</SelectItem>
+                      <SelectItem value="mentor">Mentor</SelectItem>
                       <SelectItem value="investor">Investor</SelectItem>
                     </SelectContent>
                   </Select>
@@ -221,10 +167,7 @@ const Signup = () => {
             
             <CardFooter className="flex justify-center">
               <p className="text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <Link to="/login" className="text-primary hover:underline">
-                  Log in
-                </Link>
+                Already have an account? <Link to="/login" className="text-primary hover:underline">Log in</Link>
               </p>
             </CardFooter>
           </Card>
