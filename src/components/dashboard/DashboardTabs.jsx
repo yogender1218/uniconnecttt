@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,12 +12,13 @@ import ActivityCard from "@/components/dashboard/ActivityCard";
 import DiscoverCard from "@/components/dashboard/DiscoverCard";
 import { discoverPosts, trendingTopics, peopleToFollow, followingActivities } from "@/data/dashboardData";
 import { Separator } from "@/components/ui/separator";
+import { getPosts, mockPosts, likePost, commentOnPost } from "@/services/mockPosts";
 
 const DashboardTabs = ({
   activeSection,
   loading,
   error,
-  posts,
+  posts = [], // Default to an empty array if posts is undefined
   likePost,
   commentOnPost,
   replyToComment,
@@ -27,13 +27,30 @@ const DashboardTabs = ({
   handleConnectWithPerson,
   handleViewPersonProfile
 }) => {
+  const [postList, setPostList] = useState(posts.length > 0 ? posts : mockPosts);
+
   const handleCreatePost = async (content, hashtags, files) => {
     try {
-      await createPost(content, hashtags, files);
+      const newPost = await createPost(content, hashtags, files);
+      setPostList([newPost, ...postList]); // Prepend new post
       toast.success("Post created successfully!");
     } catch (error) {
       console.error("Error creating post:", error);
       toast.error("Failed to create post");
+    }
+  };
+
+  const handleLikePost = async (postId) => {
+    const updatedPost = await likePost(postId);
+    if (updatedPost) {
+      setPostList(postList.map(post => post.id === postId ? updatedPost : post));
+    }
+  };
+
+  const handleCommentOnPost = async (postId, comment) => {
+    const updatedPost = await commentOnPost(postId, comment);
+    if (updatedPost) {
+      setPostList(postList.map(post => post.id === postId ? updatedPost : post));
     }
   };
 
@@ -145,6 +162,21 @@ const DashboardTabs = ({
     return null; // Will redirect in useEffect
   }
 
+  const fetchPosts = async () => {
+    try {
+      const fetchedPosts = await getPosts();
+      setPostList(fetchedPosts);
+      toast.success("Posts fetched successfully");
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      toast.error("Failed to fetch posts");
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   return (
     <Tabs defaultValue="feed">
       <TabsList className="w-full">
@@ -152,7 +184,6 @@ const DashboardTabs = ({
         <TabsTrigger value="discover" className="flex-1">Discover</TabsTrigger>
         <TabsTrigger value="following" className="flex-1">Following</TabsTrigger>
       </TabsList>
-      
       <TabsContent value="feed" className="pt-4">
         <CreatePostForm onCreatePost={handleCreatePost} className="mb-6" />
         
@@ -160,40 +191,27 @@ const DashboardTabs = ({
           <div className="flex justify-center p-8">
             <p>Loading posts...</p>
           </div>
-        ) : error ? (
+        ) : (
+          <StaggeredContainer className="space-y-6" animation="fade" initialDelay={0.1} staggerDelay={0.15}>
+            {postList.filter(post => post).map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                onLike={handleLikePost}
+                onComment={handleCommentOnPost}
+                onReplyToComment={replyToComment}
+              />
+            ))}
+          </StaggeredContainer>
+        )}
+
+        {error && (
           <div className="text-center p-8 text-destructive">
             <p>{error}</p>
-            <Button 
-              variant="outline" 
-              className="mt-2"
-              onClick={() => window.location.reload()}
-            >
+            <Button variant="outline" className="mt-2" onClick={fetchPosts}>
               Retry
             </Button>
           </div>
-        ) : (
-          <StaggeredContainer 
-            className="space-y-6" 
-            animation="fade" 
-            initialDelay={0.1} 
-            staggerDelay={0.15}
-          >
-            {posts && posts.length > 0 ? (
-              posts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  onLike={likePost}
-                  onComment={commentOnPost}
-                  onReplyToComment={replyToComment}
-                />
-              ))
-            ) : (
-              <div className="text-center p-8">
-                <p className="text-muted-foreground">No posts available. Create your first post!</p>
-              </div>
-            )}
-          </StaggeredContainer>
         )}
       </TabsContent>
       

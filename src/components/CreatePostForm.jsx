@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -8,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Paperclip, Image, Video, Send, X } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import * as studentApi from "@/services/studentApi";
+import { createPost } from "@/services/mockPosts";
 
 const CreatePostForm = ({ 
   onCreatePost,
@@ -62,20 +61,8 @@ const CreatePostForm = ({
     setIsLoading(true);
     
     try {
-      // Create FormData to send files
-      const formData = new FormData();
-      formData.append("content", content);
-      formData.append("hashtag", hashtags);
-      
-      // Add all selected files to the form data
-      selectedFiles.forEach((file, index) => {
-        formData.append(`file${index}`, file);
-      });
-      
-      if (user?.type === "student") {
-        // Use the student API for students
-        await studentApi.createPost(formData);
-      }
+      // Use the mockPosts createPost function
+      const newPost = await createPost(content, hashtags, selectedFiles);
       
       // Clean up the form
       setContent("");

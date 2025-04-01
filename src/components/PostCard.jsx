@@ -1,50 +1,48 @@
-
 import React, { useState } from "react";
 import { formatDistance } from "date-fns";
 import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import CommentSection from "@/components/CommentSection";
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger 
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import UserProfileModal from "@/components/UserProfileModal";
 
-const PostCard = ({ 
-  post, 
-  onLike, 
+const PostCard = ({
+  post,
+  onLike,
   onComment,
   onReplyToComment,
-  className 
+  className
 }) => {
   const [isCommentsVisible, setIsCommentsVisible] = useState(false);
   const [isUserProfileOpen, setIsUserProfileOpen] = useState(false);
-  
+
   // Handle null or undefined post
   if (!post) {
     return null;
   }
-  
+
   const handleLike = () => {
     onLike(post.id);
   };
-  
+
   const handleAddComment = (content) => {
     onComment(post.id, content);
   };
-  
+
   const handleReplyToComment = (commentId, content) => {
     if (onReplyToComment) {
       onReplyToComment(post.id, commentId, content);
     }
   };
-  
+
   const toggleComments = () => {
     setIsCommentsVisible(!isCommentsVisible);
   };
@@ -53,9 +51,12 @@ const PostCard = ({
   const author = post.author || { name: "Unknown", id: "0" };
   const authorName = author.name || "Unknown";
   const authorInitial = authorName.charAt(0) || "?";
-  
+
   // Get media attachments if available - handle various API formats
   const mediaFiles = post.media_files || post.files || [];
+
+  // Handle hashtags
+  const hashtags = Array.isArray(post.hashtags) ? post.hashtags : (typeof post.hashtags === 'string' ? post.hashtags.split(',') : []);
 
   return (
     <div className={cn("border border-border rounded-lg overflow-hidden bg-card", className)}>
@@ -65,7 +66,6 @@ const PostCard = ({
           <Avatar>
             <AvatarFallback>{authorInitial}</AvatarFallback>
           </Avatar>
-          
           <div>
             <p className="font-medium">{authorName}</p>
             <p className="text-xs text-muted-foreground">
@@ -92,9 +92,9 @@ const PostCard = ({
       <div className="px-4 pb-4">
         <p className="mb-3 whitespace-pre-line">{post.content || "No content"}</p>
         
-        {post.hashtags && (
+        {hashtags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
-            {post.hashtags.split(",").map((tag, index) => (
+            {hashtags.map((tag, index) => (
               <Badge key={index} variant="secondary" className="text-xs">
                 #{tag.trim()}
               </Badge>

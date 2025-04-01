@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,20 +5,20 @@ import { Send } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import ReplyComment from "@/components/ReplyComment";
 
-const CommentSection = ({ 
-  comments = [], 
-  onAddComment, 
-  onReplyToComment 
+const CommentSection = ({
+  comments = [],
+  onAddComment,
+  onReplyToComment
 }) => {
   const [commentText, setCommentText] = useState("");
-  
+
   const handleAddComment = () => {
     if (commentText.trim()) {
       onAddComment(commentText);
       setCommentText("");
     }
   };
-  
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -27,9 +26,9 @@ const CommentSection = ({
     }
   };
 
-  // Make sure comments is an array even if it's null/undefined
+  // Ensure comments is an array even if it's null/undefined
   const safeComments = Array.isArray(comments) ? comments : [];
-  
+
   return (
     <div className="border-t border-border p-4">
       <div className="space-y-4">
@@ -37,10 +36,10 @@ const CommentSection = ({
           <>
             <Separator />
             <div className="space-y-3">
-              {safeComments.map((comment) => (
-                <ReplyComment 
-                  key={comment.id} 
-                  comment={comment} 
+              {safeComments.map((comment, index) => (
+                <ReplyComment
+                  key={comment.id || index} // Use index as a fallback if id is not available
+                  comment={comment}
                   onReply={onReplyToComment || (() => {})}
                 />
               ))}
@@ -51,7 +50,7 @@ const CommentSection = ({
             No comments yet. Be the first to comment!
           </p>
         )}
-        
+
         <div className="flex items-start gap-2 mt-4">
           <Textarea
             value={commentText}
