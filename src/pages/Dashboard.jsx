@@ -27,6 +27,8 @@ import UserProfileModal from "@/components/UserProfileModal";
 import CoursesModal from "@/components/student/CoursesModal";
 import ManageCoursesModal from "@/components/professor/ManageCoursesModal";
 import PortfolioModal from "@/components/investor/PortfolioModal";
+import StartupButton from "../components/StartupButton";
+import StartupInvestor from "../components/StartupInvestor";
 
 const analyticsData = [
   { name: "Jan", posts: 4, engagement: 30, connections: 8 },
@@ -425,6 +427,8 @@ const Dashboard = () => {
             setActiveSection={setActiveSection}
             typeIcon={getTypeIcon()}
           />
+          <StartupButton></StartupButton>
+          <StartupInvestor></StartupInvestor>
         </div>
         
         {/* Main Content */}

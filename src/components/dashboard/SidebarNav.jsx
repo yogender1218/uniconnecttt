@@ -14,8 +14,8 @@ const SidebarNav = ({
   typeIcon
 }) => {
   return (
-    <FadeIn className="hidden md:block">
-      <div className="glass-card p-4 rounded-xl space-y-6">
+    <FadeIn className="md:block" >
+      <div className="glass-card p-4 rounded-xl space-y-6" style={{boxShadow: "0 0px 5px rgba(0, 0, 0, 0.1)"}}>
         <div className="flex flex-col items-center">
           <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
             {typeIcon}
