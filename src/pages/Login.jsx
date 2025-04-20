@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -19,43 +18,41 @@ import {
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     if (!username || !password) {
       toast.error("Please enter both username and password");
       return;
     }
-    
+
     setIsLoading(true);
+
     try {
-      // Send login request to the API
       const response = await fetch("https://uniconnectbackend.onrender.com/api/users/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          username,
-          password
-        }),
+        body: JSON.stringify({ username, password }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
       }
-      
-      // Store the user data and token using the AuthContext
+
       await login(data);
-      
+
       toast.success("Login successful!");
-      // Redirect to dashboard
       navigate("/dashboard");
+
     } catch (error) {
       console.error("Login failed:", error);
       toast.error(error.message || "Invalid username or password");
@@ -75,8 +72,10 @@ const Login = () => {
                 Enter your credentials to sign in to your account
               </CardDescription>
             </CardHeader>
+
             <CardContent>
               <form onSubmit={handleLogin} className="space-y-4">
+                
                 <div className="space-y-2">
                   <label htmlFor="username" className="text-sm font-medium">
                     Username
@@ -89,6 +88,7 @@ const Login = () => {
                     required
                   />
                 </div>
+
                 <div className="space-y-2">
                   <label htmlFor="password" className="text-sm font-medium">
                     Password
@@ -102,6 +102,7 @@ const Login = () => {
                     required
                   />
                 </div>
+
                 <Button 
                   type="submit" 
                   className="w-full"
@@ -109,8 +110,10 @@ const Login = () => {
                 >
                   {isLoading ? "Signing in..." : "Sign in"}
                 </Button>
+
               </form>
             </CardContent>
+
             <CardFooter className="flex justify-center">
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}

@@ -1,127 +1,103 @@
 /* StartupCard.module.css */
-.cardContainer {
+
+/* Overall List Layout */
+.startupList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2.5rem;
+  padding: 4rem 2rem;
+  background: linear-gradient(to right, #fafafa, #ffffff);
+  min-height: 80vh;
+  margin: 50px 60px 0px 60px;
+}
+
+/* Single Startup Card */
+.startupCard {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  padding: 15px 25px ;
-  margin: 100px 20px 20px 20px;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  border: 1px solid #dcdfe3;
+  position: relative;
 }
 
-.card {
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 24px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  max-width: 600px;
+/* Card Hover Effect */
+.startupCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  border-color: #3498db;
 }
 
-.header {
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-}
-
-.cardTitle {
-  margin: 0;
-  font-size: 24px;
+/* Startup Name */
+.name {
+  font-size: 1.8rem;
+  font-weight: 700;
   color: #2c3e50;
-  font-weight: bold;
+  margin-bottom: 1rem;
+  border-bottom: 3px solid #3498db;
+  display: inline-block;
+  padding-bottom: 0.5rem;
 }
 
+/* Student Name */
 .studentName {
-  margin: 8px 0 0;
-  color: #7f8c8d;
-  font-size: 16px;
-}
-
-.body {
-  padding-top: 16px;
-}
-
-.sectionTitle {
-  font-size: 18px;
-  color: #34495e;
+  font-size: 1.1rem;
   font-weight: 600;
-  margin: 16px 0 8px;
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
 }
 
-.cardText {
-  margin: 0 0 16px;
-  color: #34495e;
-  font-size: 16px;
-  line-height: 1.5;
+/* Paragraphs inside Card */
+.startupCard p {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.7;
+  margin-bottom: 1rem;
 }
 
-.label {
-  display: block;
-  margin-bottom: 5px;
-  margin-top: -10px;
-  color: #666;
+/* Bold labels like Problem, Solution */
+.startupCard p strong {
+  color: #374151;
+  font-weight: 700;
 }
 
-.textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.formGroup {
-  margin-bottom: 15px;
-}
-
-.saveButton {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.saveButton:hover {
-  background-color: #2980b9;
-}
-
-.patchButton {
-  background-color: #2ecc71;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 16px;
-  display: block;
-  width: 100%;
+/* Special Message when No Startups */
+.noStartups {
   text-align: center;
+  font-size: 1.5rem;
+  color: #e74c3c;
+  background: #ffe5e5;
+  padding: 2rem 3rem;
+  margin: 4rem auto;
+  border-radius: 14px;
+  width: fit-content;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
-.patchButton:hover {
-  background-color: #27ae60;
-}
-
-.successMessage {
-  color: green;
-  text-align: center;
-  margin-top: 10px;
-}
-
-/* Responsive design */
-@media (min-width: 768px) {
-  .card {
-    width: calc(50% - 20px);
+/* Mobile Responsive Tweaks */
+@media (max-width: 600px) {
+  .startupList {
+    padding: 2rem 1rem;
+    gap: 1.5rem;
   }
-}
 
-@media (min-width: 1024px) {
-  .card {
-    width: calc(33.333% - 20px);
+  .startupCard {
+    padding: 1.5rem;
+  }
+
+  .name {
+    font-size: 1.5rem;
+  }
+
+  .studentName {
+    font-size: 1rem;
+  }
+
+  .startupCard p {
+    font-size: 0.95rem;
   }
 }
